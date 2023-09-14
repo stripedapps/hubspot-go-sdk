@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   description: ""
-  title: Contacts
+  title: Deals
   version: v3
 servers:
 - url: https://api.hubapi.com
@@ -9,12 +9,11 @@ tags:
 - name: Batch
 - name: Basic
 - name: Public_Object
-- name: GDPR
 - name: Search
 paths:
-  /crm/v3/objects/contacts/merge:
+  /crm/v3/objects/deals/merge:
     post:
-      operationId: post-/crm/v3/objects/contacts/merge
+      operationId: post-/crm/v3/objects/deals/merge
       parameters: []
       requestBody:
         content:
@@ -37,26 +36,29 @@ paths:
           description: An error occurred.
       security:
       - oauth2:
-        - crm.objects.contacts.write
+        - crm.objects.deals.write
       - private_apps:
-        - crm.objects.contacts.write
-      summary: Merge two contacts with same type
+        - crm.objects.deals.write
+      summary: Merge two deals with same type
       tags:
       - Public_Object
-  /crm/v3/objects/contacts/batch/archive:
+  /crm/v3/objects/deals/search:
     post:
-      operationId: post-/crm/v3/objects/contacts/batch/archive
+      operationId: post-/crm/v3/objects/deals/search
       parameters: []
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BatchInputSimplePublicObjectId'
+              $ref: '#/components/schemas/PublicObjectSearchRequest'
         required: true
       responses:
-        "204":
-          content: {}
-          description: No content
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionResponseWithTotalSimplePublicObjectForwardPaging'
+          description: successful operation
         default:
           content:
             '*/*':
@@ -65,17 +67,16 @@ paths:
           description: An error occurred.
       security:
       - oauth2:
-        - crm.objects.contacts.write
+        - crm.objects.deals.read
       - private_apps:
-        - crm.objects.contacts.write
-      summary: Archive a batch of contacts by ID
+        - crm.objects.deals.read
       tags:
-      - Batch
-  /crm/v3/objects/contacts:
+      - Search
+  /crm/v3/objects/deals:
     get:
-      description: Read a page of contacts. Control what is returned via the `properties`
+      description: Read a page of deals. Control what is returned via the `properties`
         query param.
-      operationId: get-/crm/v3/objects/contacts
+      operationId: get-/crm/v3/objects/deals
       parameters:
       - description: The maximum number of results to display per page.
         explode: true
@@ -159,17 +160,17 @@ paths:
           description: An error occurred.
       security:
       - oauth2:
-        - crm.objects.contacts.read
+        - crm.objects.deals.read
       - private_apps:
-        - crm.objects.contacts.read
+        - crm.objects.deals.read
       summary: List
       tags:
       - Basic
     post:
-      description: "Create a contact with the given properties and return a copy of\
-        \ the object, including the ID. Documentation and examples for creating standard\
-        \ contacts is provided."
-      operationId: post-/crm/v3/objects/contacts
+      description: "Create a deal with the given properties and return a copy of the\
+        \ object, including the ID. Documentation and examples for creating standard\
+        \ deals is provided."
+      operationId: post-/crm/v3/objects/deals
       parameters: []
       requestBody:
         content:
@@ -192,15 +193,15 @@ paths:
           description: An error occurred.
       security:
       - oauth2:
-        - crm.objects.contacts.write
+        - crm.objects.deals.write
       - private_apps:
-        - crm.objects.contacts.write
+        - crm.objects.deals.write
       summary: Create
       tags:
       - Basic
-  /crm/v3/objects/contacts/batch/update:
+  /crm/v3/objects/deals/batch/update:
     post:
-      operationId: post-/crm/v3/objects/contacts/batch/update
+      operationId: post-/crm/v3/objects/deals/batch/update
       parameters: []
       requestBody:
         content:
@@ -229,29 +230,26 @@ paths:
           description: An error occurred.
       security:
       - oauth2:
-        - crm.objects.contacts.write
+        - crm.objects.deals.write
       - private_apps:
-        - crm.objects.contacts.write
-      summary: Update a batch of contacts
+        - crm.objects.deals.write
+      summary: Update a batch of deals
       tags:
       - Batch
-  /crm/v3/objects/contacts/search:
+  /crm/v3/objects/deals/batch/archive:
     post:
-      operationId: post-/crm/v3/objects/contacts/search
+      operationId: post-/crm/v3/objects/deals/batch/archive
       parameters: []
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PublicObjectSearchRequest'
+              $ref: '#/components/schemas/BatchInputSimplePublicObjectId'
         required: true
       responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CollectionResponseWithTotalSimplePublicObjectForwardPaging'
-          description: successful operation
+        "204":
+          content: {}
+          description: No content
         default:
           content:
             '*/*':
@@ -260,14 +258,15 @@ paths:
           description: An error occurred.
       security:
       - oauth2:
-        - crm.objects.contacts.read
+        - crm.objects.deals.write
       - private_apps:
-        - crm.objects.contacts.read
+        - crm.objects.deals.write
+      summary: Archive a batch of deals by ID
       tags:
-      - Search
-  /crm/v3/objects/contacts/batch/create:
+      - Batch
+  /crm/v3/objects/deals/batch/create:
     post:
-      operationId: post-/crm/v3/objects/contacts/batch/create
+      operationId: post-/crm/v3/objects/deals/batch/create
       parameters: []
       requestBody:
         content:
@@ -296,20 +295,66 @@ paths:
           description: An error occurred.
       security:
       - oauth2:
-        - crm.objects.contacts.write
+        - crm.objects.deals.write
       - private_apps:
-        - crm.objects.contacts.write
-      summary: Create a batch of contacts
+        - crm.objects.deals.write
+      summary: Create a batch of deals
       tags:
       - Batch
-  /crm/v3/objects/contacts/{contactId}:
+  /crm/v3/objects/deals/batch/read:
+    post:
+      operationId: post-/crm/v3/objects/deals/batch/read
+      parameters:
+      - description: Whether to return only results that have been archived.
+        explode: true
+        in: query
+        name: archived
+        required: false
+        schema:
+          default: false
+          type: boolean
+        style: form
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchReadInputSimplePublicObjectId'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchResponseSimplePublicObject'
+          description: successful operation
+        "207":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchResponseSimplePublicObjectWithErrors'
+          description: multiple statuses
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - crm.objects.deals.read
+      - private_apps:
+        - crm.objects.deals.read
+      summary: "Read a batch of deals by internal ID, or unique property values"
+      tags:
+      - Batch
+  /crm/v3/objects/deals/{dealId}:
     delete:
-      description: "Move an Object identified by `{contactId}` to the recycling bin."
-      operationId: "delete-/crm/v3/objects/contacts/{contactId}"
+      description: "Move an Object identified by `{dealId}` to the recycling bin."
+      operationId: "delete-/crm/v3/objects/deals/{dealId}"
       parameters:
       - explode: false
         in: path
-        name: contactId
+        name: dealId
         required: true
         schema:
           type: string
@@ -326,21 +371,22 @@ paths:
           description: An error occurred.
       security:
       - oauth2:
-        - crm.objects.contacts.write
+        - crm.objects.deals.write
       - private_apps:
-        - crm.objects.contacts.write
+        - crm.objects.deals.write
       summary: Archive
       tags:
       - Basic
     get:
-      description: "Read an Object identified by `{contactId}`. `{contactId}` refers\
-        \ to the internal object ID.  Control what is returned via the `properties`\
-        \ query param."
-      operationId: "get-/crm/v3/objects/contacts/{contactId}"
+      description: "Read an Object identified by `{dealId}`. `{dealId}` refers to\
+        \ the internal object ID by default, or optionally any unique property value\
+        \ as specified by the `idProperty` query param.  Control what is returned\
+        \ via the `properties` query param."
+      operationId: "get-/crm/v3/objects/deals/{dealId}"
       parameters:
       - explode: false
         in: path
-        name: contactId
+        name: dealId
         required: true
         schema:
           type: string
@@ -390,6 +436,15 @@ paths:
           default: false
           type: boolean
         style: form
+      - description: The name of a property whose values are unique for this object
+          type
+        explode: true
+        in: query
+        name: idProperty
+        required: false
+        schema:
+          type: string
+        style: form
       responses:
         "200":
           content:
@@ -405,26 +460,36 @@ paths:
           description: An error occurred.
       security:
       - oauth2:
-        - crm.objects.contacts.read
+        - crm.objects.deals.read
       - private_apps:
-        - crm.objects.contacts.read
+        - crm.objects.deals.read
       summary: Read
       tags:
       - Basic
     patch:
-      description: "Perform a partial update of an Object identified by `{contactId}`.\
-        \ `{contactId}` refers to the internal object ID. Provided property values\
-        \ will be overwritten. Read-only and non-existent properties will be ignored.\
-        \ Properties values can be cleared by passing an empty string."
-      operationId: "patch-/crm/v3/objects/contacts/{contactId}"
+      description: "Perform a partial update of an Object identified by `{dealId}`.\
+        \ `{dealId}` refers to the internal object ID by default, or optionally any\
+        \ unique property value as specified by the `idProperty` query param. Provided\
+        \ property values will be overwritten. Read-only and non-existent properties\
+        \ will be ignored. Properties values can be cleared by passing an empty string."
+      operationId: "patch-/crm/v3/objects/deals/{dealId}"
       parameters:
       - explode: false
         in: path
-        name: contactId
+        name: dealId
         required: true
         schema:
           type: string
         style: simple
+      - description: The name of a property whose values are unique for this object
+          type
+        explode: true
+        in: query
+        name: idProperty
+        required: false
+        schema:
+          type: string
+        style: form
       requestBody:
         content:
           application/json:
@@ -446,90 +511,12 @@ paths:
           description: An error occurred.
       security:
       - oauth2:
-        - crm.objects.contacts.write
+        - crm.objects.deals.write
       - private_apps:
-        - crm.objects.contacts.write
+        - crm.objects.deals.write
       summary: Update
       tags:
       - Basic
-  /crm/v3/objects/contacts/gdpr-delete:
-    post:
-      description: "Permanently delete a contact and all associated content to follow\
-        \ GDPR. Use optional property 'idProperty' set to 'email' to identify contact\
-        \ by email address. If email address is not found, the email address will\
-        \ be added to a blocklist and prevent it from being used in the future."
-      operationId: post-/crm/v3/objects/contacts/gdpr-delete
-      parameters: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PublicGdprDeleteInput'
-        required: true
-      responses:
-        "204":
-          content: {}
-          description: No content
-        default:
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/Error'
-          description: An error occurred.
-      security:
-      - oauth2:
-        - crm.objects.contacts.write
-      - private_apps:
-        - crm.objects.contacts.write
-      summary: GDPR DELETE
-      tags:
-      - GDPR
-  /crm/v3/objects/contacts/batch/read:
-    post:
-      operationId: post-/crm/v3/objects/contacts/batch/read
-      parameters:
-      - description: Whether to return only results that have been archived.
-        explode: true
-        in: query
-        name: archived
-        required: false
-        schema:
-          default: false
-          type: boolean
-        style: form
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/BatchReadInputSimplePublicObjectId'
-        required: true
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BatchResponseSimplePublicObject'
-          description: successful operation
-        "207":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BatchResponseSimplePublicObjectWithErrors'
-          description: multiple statuses
-        default:
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/Error'
-          description: An error occurred.
-      security:
-      - oauth2:
-        - crm.objects.contacts.read
-      - private_apps:
-        - crm.objects.contacts.read
-      summary: "Read a batch of contacts by internal ID, or unique property values"
-      tags:
-      - Batch
 components:
   responses:
     Error:
@@ -607,27 +594,27 @@ components:
         results:
         - id: "512"
           properties:
-            company: Biglytics
+            amount: "1500.00"
+            closedate: 2019-12-07T16:50:06.678Z
             createdate: 2019-10-30T03:30:17.883Z
-            email: bcooper@biglytics.net
-            firstname: Bryan
-            lastmodifieddate: 2019-12-07T16:50:06.678Z
-            lastname: Cooper
-            phone: (877) 929-0687
-            website: biglytics.net
+            dealname: Custom data integrations
+            dealstage: presentationscheduled
+            hs_lastmodifieddate: 2019-12-07T16:50:06.678Z
+            hubspot_owner_id: "910901"
+            pipeline: default
           createdAt: 2019-10-30T03:30:17.883Z
           updatedAt: 2019-12-07T16:50:06.678Z
           archived: false
         - id: "512"
           properties:
-            company: Biglytics
+            amount: "1500.00"
+            closedate: 2019-12-07T16:50:06.678Z
             createdate: 2019-10-30T03:30:17.883Z
-            email: bcooper@biglytics.net
-            firstname: Bryan
-            lastmodifieddate: 2019-12-07T16:50:06.678Z
-            lastname: Cooper
-            phone: (877) 929-0687
-            website: biglytics.net
+            dealname: Custom data integrations
+            dealstage: presentationscheduled
+            hs_lastmodifieddate: 2019-12-07T16:50:06.678Z
+            hubspot_owner_id: "910901"
+            pipeline: default
           createdAt: 2019-10-30T03:30:17.883Z
           updatedAt: 2019-12-07T16:50:06.678Z
           archived: false
@@ -812,27 +799,27 @@ components:
         results:
         - id: "512"
           properties:
-            company: Biglytics
+            amount: "1500.00"
+            closedate: 2019-12-07T16:50:06.678Z
             createdate: 2019-10-30T03:30:17.883Z
-            email: bcooper@biglytics.net
-            firstname: Bryan
-            lastmodifieddate: 2019-12-07T16:50:06.678Z
-            lastname: Cooper
-            phone: (877) 929-0687
-            website: biglytics.net
+            dealname: Custom data integrations
+            dealstage: presentationscheduled
+            hs_lastmodifieddate: 2019-12-07T16:50:06.678Z
+            hubspot_owner_id: "910901"
+            pipeline: default
           createdAt: 2019-10-30T03:30:17.883Z
           updatedAt: 2019-12-07T16:50:06.678Z
           archived: false
         - id: "512"
           properties:
-            company: Biglytics
+            amount: "1500.00"
+            closedate: 2019-12-07T16:50:06.678Z
             createdate: 2019-10-30T03:30:17.883Z
-            email: bcooper@biglytics.net
-            firstname: Bryan
-            lastmodifieddate: 2019-12-07T16:50:06.678Z
-            lastname: Cooper
-            phone: (877) 929-0687
-            website: biglytics.net
+            dealname: Custom data integrations
+            dealstage: presentationscheduled
+            hs_lastmodifieddate: 2019-12-07T16:50:06.678Z
+            hubspot_owner_id: "910901"
+            pipeline: default
           createdAt: 2019-10-30T03:30:17.883Z
           updatedAt: 2019-12-07T16:50:06.678Z
           archived: false
@@ -854,14 +841,14 @@ components:
       example:
         id: "512"
         properties:
-          company: Biglytics
+          amount: "1500.00"
+          closedate: 2019-12-07T16:50:06.678Z
           createdate: 2019-10-30T03:30:17.883Z
-          email: bcooper@biglytics.net
-          firstname: Bryan
-          lastmodifieddate: 2019-12-07T16:50:06.678Z
-          lastname: Cooper
-          phone: (877) 929-0687
-          website: biglytics.net
+          dealname: Custom data integrations
+          dealstage: presentationscheduled
+          hs_lastmodifieddate: 2019-12-07T16:50:06.678Z
+          hubspot_owner_id: "910901"
+          pipeline: default
         createdAt: 2019-10-30T03:30:17.883Z
         updatedAt: 2019-12-07T16:50:06.678Z
         archived: false
@@ -1036,9 +1023,6 @@ components:
       - message
       type: object
     PublicGdprDeleteInput:
-      example:
-        idProperty: idProperty
-        objectId: objectId
       properties:
         objectId:
           type: string
@@ -1089,13 +1073,18 @@ components:
     SimplePublicObjectInput:
       example:
         properties:
-          email: bcooper@biglytics.net
-          phone: (877) 929-0687
-          company: Biglytics
-          website: biglytics.net
-          lastname: Cooper
-          firstname: Bryan
-        associations: []
+          amount: "1500.00"
+          dealname: Custom data integrations
+          pipeline: default
+          closedate: 2019-12-07T16:50:06.678Z
+          dealstage: presentationscheduled
+          hubspot_owner_id: "910901"
+        associations:
+        - to:
+            id: "101"
+          types:
+          - associationCategory: HUBSPOT_DEFINED
+            associationTypeId: 2
       properties:
         properties:
           additionalProperties:
@@ -1112,23 +1101,23 @@ components:
             link: ?after=NTI1Cg%3D%3D
         results:
         - properties:
-            company: Biglytics
+            amount: "1500.00"
+            closedate: 2019-12-07T16:50:06.678Z
             createdate: 2019-10-30T03:30:17.883Z
-            email: bcooper@biglytics.net
-            firstname: Bryan
-            lastmodifieddate: 2019-12-07T16:50:06.678Z
-            lastname: Cooper
-            phone: (877) 929-0687
-            website: biglytics.net
+            dealname: Custom data integrations
+            dealstage: presentationscheduled
+            hs_lastmodifieddate: 2019-12-07T16:50:06.678Z
+            hubspot_owner_id: "910901"
+            pipeline: default
         - properties:
-            company: Biglytics
+            amount: "1500.00"
+            closedate: 2019-12-07T16:50:06.678Z
             createdate: 2019-10-30T03:30:17.883Z
-            email: bcooper@biglytics.net
-            firstname: Bryan
-            lastmodifieddate: 2019-12-07T16:50:06.678Z
-            lastname: Cooper
-            phone: (877) 929-0687
-            website: biglytics.net
+            dealname: Custom data integrations
+            dealstage: presentationscheduled
+            hs_lastmodifieddate: 2019-12-07T16:50:06.678Z
+            hubspot_owner_id: "910901"
+            pipeline: default
       properties:
         results:
           items:
@@ -1170,14 +1159,14 @@ components:
     SimplePublicObjectWithAssociations:
       example:
         properties:
-          company: Biglytics
+          amount: "1500.00"
+          closedate: 2019-12-07T16:50:06.678Z
           createdate: 2019-10-30T03:30:17.883Z
-          email: bcooper@biglytics.net
-          firstname: Bryan
-          lastmodifieddate: 2019-12-07T16:50:06.678Z
-          lastname: Cooper
-          phone: (877) 929-0687
-          website: biglytics.net
+          dealname: Custom data integrations
+          dealstage: presentationscheduled
+          hs_lastmodifieddate: 2019-12-07T16:50:06.678Z
+          hubspot_owner_id: "910901"
+          pipeline: default
       properties:
         id:
           type: string
@@ -1267,21 +1256,31 @@ components:
       example:
         inputs:
         - properties:
-            email: bcooper@biglytics.net
-            phone: (877) 929-0687
-            company: Biglytics
-            website: biglytics.net
-            lastname: Cooper
-            firstname: Bryan
-          associations: []
+            amount: "1500.00"
+            dealname: Custom data integrations
+            pipeline: default
+            closedate: 2019-12-07T16:50:06.678Z
+            dealstage: presentationscheduled
+            hubspot_owner_id: "910901"
+          associations:
+          - to:
+              id: "101"
+            types:
+            - associationCategory: HUBSPOT_DEFINED
+              associationTypeId: 2
         - properties:
-            email: bcooper@biglytics.net
-            phone: (877) 929-0687
-            company: Biglytics
-            website: biglytics.net
-            lastname: Cooper
-            firstname: Bryan
-          associations: []
+            amount: "1500.00"
+            dealname: Custom data integrations
+            pipeline: default
+            closedate: 2019-12-07T16:50:06.678Z
+            dealstage: presentationscheduled
+            hubspot_owner_id: "910901"
+          associations:
+          - to:
+              id: "101"
+            types:
+            - associationCategory: HUBSPOT_DEFINED
+              associationTypeId: 2
       properties:
         inputs:
           items:
@@ -1295,20 +1294,20 @@ components:
         inputs:
         - id: "1"
           properties:
-            email: bcooper@biglytics.net
-            phone: (877) 929-0687
-            company: Biglytics
-            website: biglytics.net
-            lastname: Cooper
-            firstname: Bryan
+            amount: "1500.00"
+            dealname: Custom data integrations
+            pipeline: default
+            closedate: 2019-12-07T16:50:06.678Z
+            dealstage: presentationscheduled
+            hubspot_owner_id: "910901"
         - id: "1"
           properties:
-            email: bcooper@biglytics.net
-            phone: (877) 929-0687
-            company: Biglytics
-            website: biglytics.net
-            lastname: Cooper
-            firstname: Bryan
+            amount: "1500.00"
+            dealname: Custom data integrations
+            pipeline: default
+            closedate: 2019-12-07T16:50:06.678Z
+            dealstage: presentationscheduled
+            hubspot_owner_id: "910901"
       properties:
         inputs:
           items:
@@ -1332,12 +1331,12 @@ components:
       example:
         id: "1"
         properties:
-          email: bcooper@biglytics.net
-          phone: (877) 929-0687
-          company: Biglytics
-          website: biglytics.net
-          lastname: Cooper
-          firstname: Bryan
+          amount: "1500.00"
+          dealname: Custom data integrations
+          pipeline: default
+          closedate: 2019-12-07T16:50:06.678Z
+          dealstage: presentationscheduled
+          hubspot_owner_id: "910901"
       properties:
         properties:
           additionalProperties:
@@ -1374,13 +1373,18 @@ components:
     SimplePublicObjectInputForCreate:
       example:
         properties:
-          email: bcooper@biglytics.net
-          phone: (877) 929-0687
-          company: Biglytics
-          website: biglytics.net
-          lastname: Cooper
-          firstname: Bryan
-        associations: []
+          amount: "1500.00"
+          dealname: Custom data integrations
+          pipeline: default
+          closedate: 2019-12-07T16:50:06.678Z
+          dealstage: presentationscheduled
+          hubspot_owner_id: "910901"
+        associations:
+        - to:
+            id: "101"
+          types:
+          - associationCategory: HUBSPOT_DEFINED
+            associationTypeId: 2
       properties:
         properties:
           additionalProperties:
@@ -1400,12 +1404,12 @@ components:
         authorizationCode:
           authorizationUrl: https://app.hubspot.com/oauth/authorize
           scopes:
-            crm.objects.custom.read: View custom object records
-            tickets: Read and write tickets
-            crm.objects.goals.read: Read goals
-            media_bridge.read: Read media and media events
-            crm.objects.custom.write: Change custom object records
             e-commerce: e-commerce
+            crm.objects.custom.write: Change custom object records
+            crm.objects.custom.read: View custom object records
+            crm.objects.goals.read: Read goals
+            tickets: Read and write tickets
+            media_bridge.read: Read media and media events
           tokenUrl: https://api.hubapi.com/oauth/v1/token
       type: oauth2
     oauth2:
@@ -1414,15 +1418,15 @@ components:
           authorizationUrl: https://app.hubspot.com/oauth/authorize
           scopes:
             crm.objects.companies.write: ' '
-            crm.objects.companies.read: ' '
-            crm.objects.line_items.write: Line Items
-            crm.objects.quotes.read: Quotes
-            crm.objects.deals.write: ' '
-            crm.objects.line_items.read: Line Items
-            crm.objects.deals.read: ' '
-            crm.objects.quotes.write: Quotes
-            crm.objects.contacts.read: ' '
             crm.objects.contacts.write: ' '
+            crm.objects.contacts.read: ' '
+            crm.objects.quotes.write: Quotes
+            crm.objects.deals.read: ' '
+            crm.objects.line_items.read: Line Items
+            crm.objects.deals.write: ' '
+            crm.objects.quotes.read: Quotes
+            crm.objects.line_items.write: Line Items
+            crm.objects.companies.read: ' '
           tokenUrl: https://api.hubapi.com/oauth/v1/token
       type: oauth2
     private_apps_legacy:

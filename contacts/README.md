@@ -141,11 +141,11 @@ Authentication schemes defined for the API:
 - **Authorization URL**: https://app.hubspot.com/oauth/authorize
 - **Scopes**: 
  - **crm.objects.custom.read**: View custom object records
- - **tickets**: Read and write tickets
- - **crm.objects.goals.read**: Read goals
- - **media_bridge.read**: Read media and media events
  - **crm.objects.custom.write**: Change custom object records
  - **e-commerce**: e-commerce
+ - **media_bridge.read**: Read media and media events
+ - **tickets**: Read and write tickets
+ - **crm.objects.goals.read**: Read goals
 
 Example
 
@@ -173,16 +173,16 @@ r, err := client.Service.Operation(auth, args)
 - **Flow**: accessCode
 - **Authorization URL**: https://app.hubspot.com/oauth/authorize
 - **Scopes**: 
- - **crm.objects.companies.write**:  
- - **crm.objects.companies.read**:  
- - **crm.objects.line_items.write**: Line Items
- - **crm.objects.quotes.read**: Quotes
- - **crm.objects.deals.write**:  
  - **crm.objects.line_items.read**: Line Items
  - **crm.objects.deals.read**:  
  - **crm.objects.quotes.write**: Quotes
  - **crm.objects.contacts.read**:  
  - **crm.objects.contacts.write**:  
+ - **crm.objects.companies.write**:  
+ - **crm.objects.companies.read**:  
+ - **crm.objects.line_items.write**: Line Items
+ - **crm.objects.quotes.read**: Quotes
+ - **crm.objects.deals.write**:  
 
 Example
 
