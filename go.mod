@@ -1,12 +1,12 @@
 module github.com/stripedapps/hubspot-go-sdk
 
-go 1.20
+go 1.21
 
-require golang.org/x/oauth2 v0.12.0
+require golang.org/x/oauth2 v0.13.0
 
 require (
 	github.com/golang/protobuf v1.5.3 // indirect
-	golang.org/x/net v0.15.0 // indirect
-	google.golang.org/appengine v1.6.7 // indirect
+	golang.org/x/net v0.17.0 // indirect
+	google.golang.org/appengine v1.6.8 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
 )
